@@ -1,7 +1,7 @@
 'use server';
 
 import { signInFormSchema } from '../validators';
-import { signIn, signOut } from '@/auth';
+import { signIn, signOut as signOutAuth } from '@/auth';
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 
 // Sign in the user with credentials
@@ -27,5 +27,5 @@ export async function signInWithCredentials(
 
 // Sign the user out
 export async function signOutUser() {
-  await signOut();
+  await signOutAuth();
 }
