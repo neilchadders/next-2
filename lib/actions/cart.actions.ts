@@ -34,7 +34,7 @@ export async function addItemToCart(data: CartItem) {
 
 
     //Test
-    console.log('Session Card ID :', sessionCartId);
+    //console.log('Session Card ID :', sessionCartId);
     
     // Get session and user ID
     const session = await auth();
