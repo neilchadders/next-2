@@ -39,10 +39,7 @@ const handleRemoveFromCart = async () => {
   startTransition(async () => {
     const res = await removeItemFromCart(item.productId);
 
-    toast({
-      variant: res.success ? 'default' : 'destructive',
-      description: res.message,
-    });
+    toast(res.message);
 
     return;
   });
