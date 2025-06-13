@@ -19,12 +19,14 @@ export const signUpDefaultValues = {
   confirmPassword: '',
 };
 
+
+
 export const shippingAddressDefaultValues = {
-  fullName: '',
-  streetAddress: '',
-  city: '',
-  postalCode: '',
-  country: '',
+  fullName: 'John Doe',
+  streetAddress: '123 Main St',
+  city: 'Leeds',
+  postalCode: 'LS27 0AR',
+  country: 'UK',
 };
 
 export const PAYMENT_METHODS = process.env.PAYMENT_METHODS
