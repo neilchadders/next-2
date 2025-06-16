@@ -22,7 +22,7 @@ const OrderDetailsPage = async (props: {
     <OrderDetailsTable
       order={{
         ...order,
-        shippingAddress: order.shippingAddress as ShippingAddress,
+        shippingAddress: order.shippingAddress as ShippingAddress
       }}
     />
   );
