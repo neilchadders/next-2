@@ -267,10 +267,10 @@ export async function updateOrderToPaid({
       paymentResult: updatedOrder.paymentResult as PaymentResult,
     },
   });
-} */
+} 
 
 // Get user's orders
-/*export async function getMyOrders({
+export async function getMyOrders({
   limit = PAGE_SIZE,
   page,
 }: {
@@ -286,7 +286,7 @@ export async function updateOrderToPaid({
     take: limit,
     skip: (page - 1) * limit,
   });
-  */
+  
 
   const dataCount = await prisma.order.count({
     where: { userId: session?.user?.id },
@@ -443,3 +443,5 @@ export async function deliverOrder(orderId: string) {
     return { success: false, message: formatError(error) };
   }
 }
+
+ */
