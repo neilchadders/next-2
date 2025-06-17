@@ -28,7 +28,7 @@ const OrderDetailsTable = ({
   order,
   paypalClientId,
 }: {
-  order: Order;
+  order: Omit<Order, 'paymentResult'>;
   paypalClientId: string;
 }) => {
   const {
