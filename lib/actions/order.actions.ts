@@ -1,6 +1,6 @@
 'use server';
 
-import { isRedirectError } from 'next/dist/client/components/redirect';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { convertToPlainObject, formatError } from '../utils';
 import { auth } from '@/auth';
 import { getMyCart } from './cart.actions';
@@ -270,7 +270,7 @@ export async function updateOrderToPaid({
 } */
 
 // Get user's orders
-export async function getMyOrders({
+/*export async function getMyOrders({
   limit = PAGE_SIZE,
   page,
 }: {
@@ -286,6 +286,7 @@ export async function getMyOrders({
     take: limit,
     skip: (page - 1) * limit,
   });
+  */
 
   const dataCount = await prisma.order.count({
     where: { userId: session?.user?.id },
