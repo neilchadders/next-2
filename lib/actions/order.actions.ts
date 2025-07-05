@@ -297,7 +297,7 @@ export async function getMyOrders({
     totalPages: Math.ceil(dataCount / limit),
   };
 }
-
+/*
 // Get sales data and order summary
 export async function getOrderSummary() {
   // Get counts for each resource
@@ -310,7 +310,7 @@ export async function getOrderSummary() {
     _sum: { totalPrice: true },
   });
 
-  /*
+  
   
   // Get monthly sales
   const salesDataRaw = await prisma.$queryRaw<
