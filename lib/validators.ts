@@ -133,7 +133,7 @@ export const updateUserSchema = updateProfileSchema.extend({
   role: z.string().min(1, 'Role is required'),
 });
 
-// Schema to insert reviews
+// Schema to insert reviews -xxx
 export const insertReviewSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
   description: z.string().min(3, 'Description must be at least 3 characters'),
