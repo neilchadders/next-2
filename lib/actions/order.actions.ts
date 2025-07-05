@@ -311,6 +311,7 @@ export async function getOrderSummary() {
   });
 
   /*
+  
   // Get monthly sales
   const salesDataRaw = await prisma.$queryRaw<
     Array<{ month: string; totalSales: Prisma.Decimal }>
@@ -440,4 +441,4 @@ export async function deliverOrder(orderId: string) {
   }
 }
 
- 
+ */
