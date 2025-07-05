@@ -10,7 +10,7 @@ import { prisma } from '@/db/prisma';
 import { CartItem, PaymentResult } from '@/types';
 import { paypal } from '../paypal';
 import { revalidatePath } from 'next/cache';
-//import { PAGE_SIZE } from '../constants';
+import { PAGE_SIZE } from '../constants';
 //import { Prisma } from '@prisma/client';
 //import { sendPurchaseReceipt } from '@/email';
 
@@ -268,7 +268,7 @@ export async function updateOrderToPaid({
     },
   });*/
 } 
-/*
+
 // Get user's orders
 export async function getMyOrders({
   limit = PAGE_SIZE,
@@ -297,11 +297,6 @@ export async function getMyOrders({
     totalPages: Math.ceil(dataCount / limit),
   };
 }
-
-type SalesDataType = {
-  month: string;
-  totalSales: number;
-}[];
 
 // Get sales data and order summary
 export async function getOrderSummary() {
