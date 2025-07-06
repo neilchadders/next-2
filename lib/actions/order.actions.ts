@@ -11,7 +11,7 @@ import { CartItem, PaymentResult } from '@/types';
 import { paypal } from '../paypal';
 import { revalidatePath } from 'next/cache';
 import { PAGE_SIZE } from '../constants';
-//import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 //import { sendPurchaseReceipt } from '@/email';
 
 // Create order and create the order items
@@ -297,7 +297,12 @@ export async function getMyOrders({
     totalPages: Math.ceil(dataCount / limit),
   };
 }
-/*
+
+type SalesDataType = {
+  month: string;
+  totalSales: number;
+}[];
+
 // Get sales data and order summary
 export async function getOrderSummary() {
   // Get counts for each resource
@@ -310,8 +315,6 @@ export async function getOrderSummary() {
     _sum: { totalPrice: true },
   });
 
-  
-  
   // Get monthly sales
   const salesDataRaw = await prisma.$queryRaw<
     Array<{ month: string; totalSales: Prisma.Decimal }>
@@ -440,5 +443,3 @@ export async function deliverOrder(orderId: string) {
     return { success: false, message: formatError(error) };
   }
 }
-
- */
