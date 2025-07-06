@@ -96,7 +96,7 @@ return (
     disabled={isPending}
     onClick={() =>
       startTransition(async () => {
-        const res = await deliverOrder(order.id);
+        const res = await updateOrderToPaidCOD(order.id);
 
         if (res.success) {
           toast.success(res.message);
@@ -106,10 +106,9 @@ return (
       })
     }
   >
-    {isPending ? "processing..." : "Mark As Delivered"}
+    {isPending ? "processing..." : "Mark As Paid"}
   </Button>
 );
-  }
   
 const MarkAsDeliveredButton = () => {
   const [isPending, startTransition] = useTransition();
