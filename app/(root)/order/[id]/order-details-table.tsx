@@ -90,8 +90,6 @@ const OrderDetailsTable = ({
   const MarkAsPaidButton = () => {
     const [isPending, startTransition] = useTransition();
 
-    import { toast } from "sonner";
-
 return (
   <Button
     type="button"
