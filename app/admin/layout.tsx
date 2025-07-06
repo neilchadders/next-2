@@ -25,7 +25,7 @@ export default function AdminLayout({
             </Link>
             <MainNav className='mx-6' />
             <div className='ml-auto items-center flex space-x-4'>
-              {/*<AdminSearch /> */}
+              {/*<AdminSearch />*/}
               <Menu />
             </div>
           </div>
