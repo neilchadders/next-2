@@ -32,7 +32,7 @@ const UpdateUserForm = ({
   user: z.infer<typeof updateUserSchema>;
 }) => {
   const router = useRouter();
-  
+
 
   const form = useForm<z.infer<typeof updateUserSchema>>({
     resolver: zodResolver(updateUserSchema),
@@ -47,20 +47,20 @@ const UpdateUserForm = ({
     });
 
     if (!res.success) {
-      toast.error(res.message);
-      return;
+      return toast.error(res.message); // destructive = error in Sonner
     }
 
-    toast.success(res.message);
+    toast.success(res.message); // success feedback
     form.reset();
     router.push('/admin/users');
-  } catch {
-    toast.error('An error occurred while updating the user.');
+  } catch (error) {
+    toast.error((error as Error).message);
   }
 };
 
-return (
-  <Form {...form}>
+
+  return (
+    <Form {...form}>
       <form method='POST' onSubmit={form.handleSubmit(onSubmit)}>
         {/* Email */}
         <div>
