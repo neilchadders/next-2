@@ -14,11 +14,11 @@ import { formatCurrency, formatDateTime, formatId } from '@/lib/utils';
 import { Order } from '@/types';
 import Link from 'next/link';
 import Image from 'next/image';
-import { toast } from 'sonner';
+import { useTransition } from 'react';
 import {
   PayPalButtons,
   PayPalScriptProvider,
-   usePayPalScriptReducer,
+  usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
 import {
   createPayPalOrder,
@@ -26,17 +26,19 @@ import {
   updateOrderToPaidCOD,
   deliverOrder,
 } from '@/lib/actions/order.actions';
-
-import { useTransition } from 'react';
+import StripePayment from './stripe-payment';
+import { toast } from 'sonner';
 
 const OrderDetailsTable = ({
   order,
   paypalClientId,
-  isAdmin
+  isAdmin,
+  stripeClientSecret,
 }: {
   order: Omit<Order, 'paymentResult'>;
   paypalClientId: string;
-  isAdmin?: boolean;
+  isAdmin: boolean;
+  stripeClientSecret: string | null;
 }) => {
   const {
     id,
@@ -52,8 +54,6 @@ const OrderDetailsTable = ({
     paidAt,
     deliveredAt,
   } = order;
-
- 
 
   const PrintLoadingState = () => {
     const [{ isPending, isRejected }] = usePayPalScriptReducer();
@@ -80,60 +80,58 @@ const OrderDetailsTable = ({
   const handleApprovePayPalOrder = async (data: { orderID: string }) => {
     const res = await approvePayPalOrder(order.id, data);
 
-    toast(res.success ? "Success!" : "Error", {
-       description: res.message,
-    });
-
+    if (res.success) {
+      toast.success(res.message);
+    } else {
+      toast.error(res.message);
+    }
   };
 
-    // Button to mark order as paid
   const MarkAsPaidButton = () => {
     const [isPending, startTransition] = useTransition();
 
-return (
-  <Button
-    type="button"
-    disabled={isPending}
-    onClick={() =>
-      startTransition(async () => {
-        const res = await updateOrderToPaidCOD(order.id);
-
-        if (res.success) {
-          toast.success(res.message);
-        } else {
-          toast.error(res.message);
+    return (
+      <Button
+        type='button'
+        disabled={isPending}
+        onClick={() =>
+          startTransition(async () => {
+            const res = await updateOrderToPaidCOD(order.id);
+            if (res.success) {
+              toast.success(res.message);
+            } else {
+              toast.error(res.message);
+            }
+          })
         }
-      })
-    }
-  >
-    {isPending ? "processing..." : "Mark As Paid"}
-  </Button>
-);
+      >
+        {isPending ? 'processing...' : 'Mark As Paid'}
+      </Button>
+    );
   };
 
-const MarkAsDeliveredButton = () => {
-  const [isPending, startTransition] = useTransition();
+  const MarkAsDeliveredButton = () => {
+    const [isPending, startTransition] = useTransition();
 
-  return (
-    <Button
-      type="button"
-      disabled={isPending}
-      onClick={() =>
-        startTransition(async () => {
-          const res = await deliverOrder(order.id);
-
-          if (res.success) {
-            toast.success(res.message);
-          } else {
-            toast.error(res.message);
-          }
-        })
-      }
-    >
-      {isPending ? "processing..." : "Mark As Delivered"}
-    </Button>
-  );
-};
+    return (
+      <Button
+        type='button'
+        disabled={isPending}
+        onClick={() =>
+          startTransition(async () => {
+            const res = await deliverOrder(order.id);
+            if (res.success) {
+              toast.success(res.message);
+            } else {
+              toast.error(res.message);
+            }
+          })
+        }
+      >
+        {isPending ? 'processing...' : 'Mark As Delivered'}
+      </Button>
+    );
+  };
 
   return (
     <>
@@ -158,7 +156,7 @@ const MarkAsDeliveredButton = () => {
               <h2 className='text-xl pb-4'>Shipping Address</h2>
               <p>{shippingAddress.fullName}</p>
               <p className='mb-2'>
-                {shippingAddress.streetAddress}, {shippingAddress.city}
+                {shippingAddress.streetAddress}, {shippingAddress.city}{' '}
                 {shippingAddress.postalCode}, {shippingAddress.country}
               </p>
               {isDelivered ? (
@@ -186,7 +184,7 @@ const MarkAsDeliveredButton = () => {
                     <TableRow key={item.slug}>
                       <TableCell>
                         <Link
-                          href={`/product/{item.slug}`}
+                          href={`/product/${item.slug}`}
                           className='flex items-center'
                         >
                           <Image
@@ -208,11 +206,6 @@ const MarkAsDeliveredButton = () => {
                   ))}
                 </TableBody>
               </Table>
-               {/* Cash On Delivery */}
-              {isAdmin && !isPaid && paymentMethod === 'CashOnDelivery' && (
-                <MarkAsPaidButton />
-              )}
-              {isAdmin && isPaid && !isDelivered && <MarkAsDeliveredButton />}
             </CardContent>
           </Card>
         </div>
@@ -235,6 +228,7 @@ const MarkAsDeliveredButton = () => {
                 <div>Total</div>
                 <div>{formatCurrency(totalPrice)}</div>
               </div>
+
               {/* PayPal Payment */}
               {!isPaid && paymentMethod === 'PayPal' && (
                 <div>
@@ -247,6 +241,21 @@ const MarkAsDeliveredButton = () => {
                   </PayPalScriptProvider>
                 </div>
               )}
+
+              {/* Stripe Payment */}
+              {!isPaid && paymentMethod === 'Stripe' && stripeClientSecret && (
+                <StripePayment
+                  priceInCents={Number(order.totalPrice) * 100}
+                  orderId={order.id}
+                  clientSecret={stripeClientSecret}
+                />
+              )}
+
+              {/* Cash On Delivery */}
+              {isAdmin && !isPaid && paymentMethod === 'CashOnDelivery' && (
+                <MarkAsPaidButton />
+              )}
+              {isAdmin && isPaid && !isDelivered && <MarkAsDeliveredButton />}
             </CardContent>
           </Card>
         </div>
