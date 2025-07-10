@@ -1,18 +1,18 @@
 'use server';
 
-import { isRedirectError } from 'next/dist/client/components/redirect-error';
+import { isRedirectError } from 'next/dist/client/components/redirect';
 import { convertToPlainObject, formatError } from '../utils';
 import { auth } from '@/auth';
 import { getMyCart } from './cart.actions';
 import { getUserById } from './user.actions';
 import { insertOrderSchema } from '../validators';
 import { prisma } from '@/db/prisma';
-import { CartItem, PaymentResult } from '@/types';
+import { CartItem, PaymentResult, ShippingAddress } from '@/types';
 import { paypal } from '../paypal';
 import { revalidatePath } from 'next/cache';
 import { PAGE_SIZE } from '../constants';
 import { Prisma } from '@prisma/client';
-//import { sendPurchaseReceipt } from '@/email';
+import { sendPurchaseReceipt } from '@/email';
 
 // Create order and create the order items
 export async function createOrder() {
@@ -260,14 +260,14 @@ export async function updateOrderToPaid({
 
   if (!updatedOrder) throw new Error('Order not found');
 
-/* sendPurchaseReceipt({
+  sendPurchaseReceipt({
     order: {
       ...updatedOrder,
       shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
       paymentResult: updatedOrder.paymentResult as PaymentResult,
     },
-  });*/
-} 
+  });
+}
 
 // Get user's orders
 export async function getMyOrders({
@@ -286,7 +286,6 @@ export async function getMyOrders({
     take: limit,
     skip: (page - 1) * limit,
   });
-  
 
   const dataCount = await prisma.order.count({
     where: { userId: session?.user?.id },

@@ -15,15 +15,25 @@ export async function POST(req: NextRequest) {
     const { object } = event.data;
 
     // Update order status
-    await updateOrderToPaid({
-      orderId: object.metadata.orderId,
-      paymentResult: {
-        id: object.id,
-        status: 'COMPLETED',
-        email_address: object.billing_details.email!,
-        pricePaid: (object.amount / 100).toFixed(),
-      },
-    });
+    
+    try {
+  console.log('Attempting to update order:', object.metadata.orderId);
+  
+  await updateOrderToPaid({
+    orderId: object.metadata.orderId,
+    paymentResult: {
+      id: object.id,
+      status: 'COMPLETED',
+      email_address: object.billing_details.email!,
+      pricePaid: (object.amount / 100).toFixed(),
+    },
+  });
+
+  console.log('Order update successful.');
+} catch (error) {
+  console.error('Error updating order to paid:', error);
+}
+
 
     return NextResponse.json({
       message: 'updateOrderToPaid was successful',
