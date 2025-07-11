@@ -99,7 +99,10 @@ const StripePayment = ({
               : systemTheme === 'light'
               ? 'stripe'
               : 'night',
+             
         },
+          
+         
       }}
       stripe={stripePromise}
     >
