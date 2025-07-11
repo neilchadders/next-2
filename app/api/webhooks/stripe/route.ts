@@ -16,8 +16,7 @@ export async function POST(req: NextRequest) {
 
     // Update order status
     
-    try {
-  console.log('Attempting to update order:', object.metadata.orderId);
+   
   
   await updateOrderToPaid({
     orderId: object.metadata.orderId,
@@ -29,10 +28,6 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  console.log('Order update successful.');
-} catch (error) {
-  console.error('Error updating order to paid:', error);
-}
 
 
     return NextResponse.json({
