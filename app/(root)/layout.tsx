@@ -1,6 +1,8 @@
 import Header from '@/components/shared/header';
 import Footer from '@/components/footer';
-import { Toaster } from 'sonner'; // ✅ Import Sonner's Toaster
+
+
+//DO NOT ADD TOASTER!!
 
 export default function RootLayout({
   children,
@@ -13,8 +15,8 @@ export default function RootLayout({
       <main className='flex-1 wrapper'>{children}</main>
       <Footer />
 
-      {/* ✅ Sonner toaster goes here */}
-      <Toaster richColors closeButton position="top-right" />
+    
+    
     </div>
   );
 }

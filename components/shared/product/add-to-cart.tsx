@@ -6,28 +6,27 @@ import { useRouter } from "next/navigation";
 import { Plus, Minus, Loader } from "lucide-react";
 import { Cart, CartItem } from "@/types";
 import { addItemToCart, removeItemFromCart } from '@/lib/actions/cart.actions';
-import { useTransition, useRef} from 'react';
+import { useTransition, useCallback } from 'react';
 import { toast } from "sonner"; // <-- Changed this import
+import React from "react";
+
 
 
 const AddToCart = ({ cart, item }: { cart?: Cart; item: CartItem }) => {
+  console.log("[AddToCart] Component rendered");
   const router = useRouter();
-  console.log("Add to cart clicked");
+  console.log("Add to cart clicked outside");
   const [isPending, startTransition] = useTransition();
 
 
- const hasFired = useRef(false);
 
-const handleAddToCart = async () => {
-  if (hasFired.current) return;
-  hasFired.current = true;
-
+const handleAddToCart = useCallback(() => {
   startTransition(async () => {
+    console.log("clicked (inside)");
     const res = await addItemToCart(item);
 
     if (!res.success) {
       toast.error(res.message);
-      hasFired.current = false;
       return;
     }
 
@@ -37,13 +36,12 @@ const handleAddToCart = async () => {
         onClick: () => router.push("/cart"),
       },
     });
-
-    setTimeout(() => {
-      hasFired.current = false;
-    }, 1000);
   });
-};
+  console.log("Component rendered with productId", item.productId);
 
+}, [item, router]);
+ // ← Close handleAddToCart
+  
 
 // Handle remove from cart
 const handleRemoveFromCart = async () => {
@@ -90,5 +88,6 @@ return existItem ? (
 );
 };
 
-export default AddToCart;;
+export default React.memo(AddToCart);
+
 
