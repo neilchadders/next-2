@@ -6,33 +6,44 @@ import { useRouter } from "next/navigation";
 import { Plus, Minus, Loader } from "lucide-react";
 import { Cart, CartItem } from "@/types";
 import { addItemToCart, removeItemFromCart } from '@/lib/actions/cart.actions';
-import { useTransition } from 'react';
+import { useTransition, useRef} from 'react';
 import { toast } from "sonner"; // <-- Changed this import
 
 
 const AddToCart = ({ cart, item }: { cart?: Cart; item: CartItem }) => {
   const router = useRouter();
-
+  console.log("Add to cart clicked");
   const [isPending, startTransition] = useTransition();
 
-  const handleAddToCart = async () => {
-    startTransition(async () => {
-      const res = await addItemToCart(item);
-  
-      if (!res.success) {
-        toast.error(res.message); // Show error toast
-        return;
-      }
-  
-      toast.success(`${item.name} added to cart`, {
-        action: {
-          label: "Go to Cart",
-          onClick: () => router.push("/cart"),
-        },
-      });
-    }); // ← Close startTransition
-  }; // ← Close handleAddToCart
-  
+
+ const hasFired = useRef(false);
+
+const handleAddToCart = async () => {
+  if (hasFired.current) return;
+  hasFired.current = true;
+
+  startTransition(async () => {
+    const res = await addItemToCart(item);
+
+    if (!res.success) {
+      toast.error(res.message);
+      hasFired.current = false;
+      return;
+    }
+
+    toast.success(`${item.name} added to cart`, {
+      action: {
+        label: "Go to Cart",
+        onClick: () => router.push("/cart"),
+      },
+    });
+
+    setTimeout(() => {
+      hasFired.current = false;
+    }, 1000);
+  });
+};
+
 
 // Handle remove from cart
 const handleRemoveFromCart = async () => {
